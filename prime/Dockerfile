@@ -1,4 +1,6 @@
 FROM golang:latest
+RUN mkdir -p /app
 WORKDIR /app
-COPY main . 
-CMD ["/app/main"]
+COPY main.go /app 
+RUN go build main.go
+CMD [ "./main" ]
