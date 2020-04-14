@@ -25,8 +25,7 @@ func isPrime(num int) int {
 }
 
 func main() {
-	fileName := os.Args[1]
-	file, _ := os.Open(fileName)
+	file, _ := os.Open(os.Args[1])
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
