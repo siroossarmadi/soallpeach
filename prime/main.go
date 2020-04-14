@@ -1,16 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io"
 	"math"
 	"os"
+	"strconv"
 )
 
 func isPrime(num int) int {
-	if num == 1 {
-		return 0
-	}
 	if num <= 3 {
 		return 1
 	}
@@ -30,16 +28,10 @@ func main() {
 	fileName := os.Args[1]
 	file, _ := os.Open(fileName)
 	defer file.Close()
-	var perline int
-	for {
-		_, err := fmt.Fscanf(file, "%d\n", &perline)
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		fmt.Println(isPrime(perline))
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		num, _ := strconv.Atoi(scanner.Text())
+		fmt.Printf("%v\n", isPrime(num))
 	}
 }
