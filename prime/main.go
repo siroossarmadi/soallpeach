@@ -43,24 +43,33 @@ func main() {
 		}
 		isPrime(n)
 	}
+
+	str := strings.Join(ans, "\n")
+	fmt.Println(str)
 }
+
+var ans = make([]string, 0)
 
 func isPrime(n int) {
 	if n >= 1000000 {
 		for _, p := range primes {
 			if p > 47000 {
-				fmt.Println(1)
+				ans = append(ans, fmt.Sprintf("%d", 1))
+				//println(1)
 				return
 			} else if n%p == 0 {
-				fmt.Println(0)
+				ans = append(ans, fmt.Sprintf("%d", 0))
+				//println(0)
 				return
 			}
 		}
 	} else {
 		if mark[n] {
-			fmt.Println(0)
+			ans = append(ans, fmt.Sprintf("%d", 0))
+			//println(0)
 		} else {
-			fmt.Println(1)
+			ans = append(ans, fmt.Sprintf("%d", 1))
+			//print(1)
 		}
 	}
 }
