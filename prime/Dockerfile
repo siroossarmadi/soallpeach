@@ -1,5 +1,5 @@
-FROM golang:latest
-RUN mkdir -p /app
+FROM alpine:latest
+RUN mkdir /app
 WORKDIR /app
-COPY main.go /app 
-ENTRYPOINT [ "go", "run", "main.go" ]
+COPY main .
+CMD ["/app/main"]

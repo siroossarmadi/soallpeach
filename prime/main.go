@@ -1,36 +1,66 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"math"
+	"io/ioutil"
 	"os"
 	"strconv"
+	"strings"
 )
 
-func isPrime(num int) int {
-	if num <= 3 {
-		return 1
-	}
-	if num%2 == 0 || num%3 == 0 {
-		return 0
-	}
-	temp := int(math.Sqrt(float64(num))) + 1
-	for i := 5; i < temp; i += 6 {
-		if num%i == 0 || num%(i+2) == 0 {
-			return 0
-		}
-	}
-	return 1
-}
+var mark = make([]bool, 1000000)
+var primes = make([]int, 78498)
 
 func main() {
-	file, _ := os.Open(os.Args[1])
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-	for scanner.Scan() {
-		num, _ := strconv.Atoi(scanner.Text())
-		fmt.Printf("%v\n", isPrime(num))
+	path := os.Args[1]
+	mark[0] = true
+	mark[1] = true
+	p := 0
+	for i := 2; i < 1000000; i++ {
+		if mark[i] {
+			continue
+		}
+		for j := i * 2; j < 1000000; j += i {
+			mark[j] = true
+		}
+		primes[p] = i
+		p++
+	}
+
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		panic(err)
+	}
+
+	lines := strings.Split(string(b), "\n")
+	for _, l := range lines {
+		if len(l) == 0 {
+			continue
+		}
+		n, err := strconv.Atoi(l)
+		if err != nil {
+			panic(err)
+		}
+		isPrime(n)
+	}
+}
+
+func isPrime(n int) {
+	if n >= 1000000 {
+		for _, p := range primes {
+			if p > 47000 {
+				fmt.Println(1)
+				return
+			} else if n%p == 0 {
+				fmt.Println(0)
+				return
+			}
+		}
+	} else {
+		if mark[n] {
+			fmt.Println(0)
+		} else {
+			fmt.Println(1)
+		}
 	}
 }
