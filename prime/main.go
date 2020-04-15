@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const chacheSize = 1 << 17
+const chacheSize = 1000000
 
 var mark = make([]bool, 1000000)
 var primes = make([]int, 78498)
