@@ -53,7 +53,7 @@ var ans = make([]string, 0)
 func isPrime(n int) {
 	if n >= 1000000 {
 		for _, p := range primes {
-			if p > 47000 {
+			if p >= 46340 || p*p > n {
 				ans = append(ans, fmt.Sprintf("%d", 1))
 				//println(1)
 				return
