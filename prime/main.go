@@ -8,8 +8,12 @@ import (
 	"strings"
 )
 
+const chacheSize = 1 << 17
+
 var mark = make([]bool, 1000000)
 var primes = make([]int, 78498)
+var ans = make([]string, 0)
+var cache = make([]int, chacheSize)
 
 func main() {
 	path := os.Args[1]
@@ -41,35 +45,50 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		isPrime(n)
+		if n > chacheSize {
+			ans = append(ans, isPrime(n))
+		} else {
+			if cache[n] == 0 {
+				ip := isPrime(n)
+				if ip == "1" {
+					ans = append(ans, "1")
+					cache[n] = 1
+				} else if ip == "0" {
+					cache[n] = 2
+					ans = append(ans, "0")
+				}
+			} else if cache[n] == 1 {
+				ans = append(ans, "1")
+			} else if cache[n] == 2 {
+				ans = append(ans, "0")
+			}
+		}
+
 	}
 
 	str := strings.Join(ans, "\n")
 	fmt.Println(str)
 }
 
-var ans = make([]string, 0)
-
-func isPrime(n int) {
+func isPrime(n int) string {
 	if n >= 1000000 {
 		for _, p := range primes {
 			if p >= 46340 || p*p > n {
-				ans = append(ans, fmt.Sprintf("%d", 1))
-				//println(1)
-				return
+				// ans = append(ans, fmt.Sprintf("%d", 1))
+				return "1"
 			} else if n%p == 0 {
-				ans = append(ans, fmt.Sprintf("%d", 0))
+				// ans = append(ans, fmt.Sprintf("%d", 0))
 				//println(0)
-				return
+				return "0"
 			}
 		}
 	} else {
 		if mark[n] {
-			ans = append(ans, fmt.Sprintf("%d", 0))
-			//println(0)
-		} else {
-			ans = append(ans, fmt.Sprintf("%d", 1))
-			//print(1)
+			// ans = append(ans, fmt.Sprintf("%d", 0))
+			return "0"
 		}
 	}
+	// ans = append(ans, fmt.Sprintf("%d", 1))
+	return "1"
+
 }
