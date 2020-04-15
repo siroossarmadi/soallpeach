@@ -17,6 +17,7 @@ func main() {
 	mark[0] = true
 	mark[1] = true
 	p := 0
+	//
 	for i := 2; i < 1000000; i++ {
 		if mark[i] {
 			continue
