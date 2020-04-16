@@ -81,11 +81,14 @@ func main() {
 	<-ex
 	all := len(lines)
 	part := len(lines) / 8
+	goroutines := 0
 	for i := 0; i < all; i += part {
+		goroutines++
 		go isPrime(i, part, all, ex)
 	}
-	for i := 0; i < 8; i++ {
+	for 0 < goroutines {
 		<-ex
+		goroutines--
 	}
 	ans = ans[:all*2]
 	os.Stdout.Write(ans)
