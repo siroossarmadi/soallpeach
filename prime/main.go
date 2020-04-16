@@ -10,6 +10,7 @@ import (
 var mark = make([]bool, 1000000)
 var primes = make([]int, 78498)
 var lines []string
+var ans = make([]byte, 2500000)
 
 func sieve(ex chan string) {
 	mark[0] = true
@@ -37,21 +38,13 @@ func read(path string, end chan string) {
 
 	end <- "ex"
 }
-
-func main() {
-	path := os.Args[1]
-	ex := make(chan string, 2)
-	go read(path, ex)
-	go sieve(ex)
-	<-ex
-	<-ex
-	var ans = make([]byte, len(lines)*2)
-	j := 0
-	for _, l := range lines {
-		if len(l) == 0 {
+func isPrime(start int, part int, all int, ex chan string) {
+	j := start * 2
+	for i := start; i < part+start && i < all; i++ {
+		if len(lines[i]) == 0 {
 			continue
 		}
-		n, err := strconv.Atoi(l)
+		n, err := strconv.Atoi(lines[i])
 		if err != nil {
 			panic(err)
 		}
@@ -60,11 +53,9 @@ func main() {
 				if p >= 46340 || p*p > n {
 					ans[j] = 49
 					ans[j+1] = 10
-					break
 				} else if n%p == 0 {
-					ans = append(ans, 48)
-					ans = append(ans, 10)
-					break
+					ans[j] = 48
+					ans[j+1] = 10
 				}
 			}
 		} else {
@@ -78,6 +69,24 @@ func main() {
 		}
 		j += 2
 	}
-	os.Stdout.Write(ans)
+	ex <- "ex"
+}
 
+func main() {
+	path := os.Args[1]
+	ex := make(chan string, 10)
+	go read(path, ex)
+	go sieve(ex)
+	<-ex
+	<-ex
+	all := len(lines)
+	part := len(lines) / 8
+	for i := 0; i < all; i += part {
+		go isPrime(i, part, all, ex)
+	}
+	for i := 0; i < 8; i++ {
+		<-ex
+	}
+	ans = ans[:all*2]
+	os.Stdout.Write(ans)
 }
