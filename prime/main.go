@@ -80,7 +80,7 @@ func main() {
 	<-ex
 	<-ex
 	all := len(lines)
-	part := len(lines) / 4
+	part := len(lines) / 10
 	goroutines := 0
 	for i := 0; i < all; i += part {
 		goroutines++
